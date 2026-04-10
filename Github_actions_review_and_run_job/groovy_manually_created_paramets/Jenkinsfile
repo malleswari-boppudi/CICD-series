@@ -1,0 +1,17 @@
+#select this project is parameterized option while creating pipeline and give action as name and then define apply and destroy parameters
+#use these paramters inside the code.
+node {
+    stage('Preparation') { 
+        git branch: 'main', url: 'https://github.com/CloudTechDevOps/Terraform-0730am.git'
+    }
+    stage('Build') {
+       dir('Day-1-Terraform-basic-config') {
+                  sh  'terraform init'
+       }
+    }
+    stage('Results') {
+        dir('Day-1-Terraform-basic-config') {
+                  sh  'terraform ${action} -auto-approve'
+        }
+    }
+}
