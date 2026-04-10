@@ -1,0 +1,35 @@
+node {
+
+    // Correct way to define parameters in Scripted pipeline
+    properties([
+        parameters([
+            choice(
+                name: 'action',
+                choices: ['apply', 'destroy'],
+                description: 'Choose the Terraform action to perform'
+            )
+        ])
+    ])
+
+    stage('Preparation') {
+        git branch: 'main', url: 'https://github.com/CloudTechDevOps/Terraform-0730am.git'
+    }
+
+    stage('Init') {
+        dir('Day-1-Terraform-basic-config') {
+            sh 'terraform init'
+        }
+    }
+
+    stage('Plan') {
+        dir('Day-1-Terraform-basic-config') {
+            sh 'terraform plan'
+        }
+    }
+
+    stage('Execute') {
+        dir('Day-1-Terraform-basic-config') {
+            sh "terraform ${params.action} -auto-approve"
+        }
+    }
+}
